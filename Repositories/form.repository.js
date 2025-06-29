@@ -88,7 +88,7 @@ async function addForm({ name, email, fileName }) {
 // יצירת לינק זמני לשיתוף המסמך
 // יצירת לינק זמני לשיתוף המסמך
 async function generateShareLink(id) {
-  const baseUrl = 'http://localhost:3000/sign';
+  const baseUrl = process.env.CLIENT_URL || 'http://localhost:3000';
   return `${baseUrl}/${encodeURIComponent(id)}`;
 }
 
