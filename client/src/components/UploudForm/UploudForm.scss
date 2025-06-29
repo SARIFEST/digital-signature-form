@@ -1,0 +1,58 @@
+.UploudForm {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #fdfdfd;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  label {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="file"] {
+    width: 90%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      border-color: #4581a2;
+      outline: none;
+    }
+  }
+
+  button {
+    margin-top: 24px;
+    width: 100%;
+    padding: 12px;
+    background-color: #4581a2;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color:#4581a2;
+    }
+  }
+
+  p {
+    margin-top: 15px;
+    font-weight: 500;
+    color: #444;
+    text-align: center;
+  }
+}
