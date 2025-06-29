@@ -1,21 +1,23 @@
-# בוחר בסיס Node.js (אפשר להתאים גרסה)
+# שלב 1: התקנת צד השרת והלקוח
 FROM node:18-slim
 
-# התקנת LibreOffice
-RUN apt-get update && apt-get install -y libreoffice libreoffice-writer libreoffice-common && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# הגדרת תיקיית עבודה
+# יצירת תיקיית עבודה
 WORKDIR /app
 
-# העתקת קבצי התלויות והתקנתם
-COPY package*.json ./
-RUN npm install
-
-# העתקת כל קוד המקור
+# העתקת כל הקבצים
 COPY . .
 
-# חשיפת הפורט שהשרת מקשיב לו
+# התקנת תלויות עבור השרת
+RUN npm install
+
+# התקנת תלויות ובניית צד לקוח (React)
+RUN npm install --prefix client && npm run build --prefix client
+
+# הגדרת משתנה סביבה (אם צריך)
+ENV NODE_ENV=production
+
+# פתיחת הפורט
 EXPOSE 3000
 
-# הפקודה להרצת השרת
-CMD ["node", "server.js"]
+# התחלת השרת
+CMD ["npm", "start"]
