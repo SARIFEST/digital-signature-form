@@ -18,7 +18,7 @@ const SignDocument = () => {
   useEffect(() => {
     const fetchForm = async () => {
       try {
-        const res = await axios.get(`http://localhost:2000/api/form/${id}`);
+        const res = await axios.get(`/api/form/${id}`);
         setFormData(res.data);
       } catch (err) {
         console.error('שגיאה בטעינת הטופס', err);
@@ -49,7 +49,7 @@ const SignDocument = () => {
     try {
       setSending(true);
       setMessage('שולח את המסמך...');
-      await axios.post(`http://localhost:2000/api/form/sign/${id}`, { signature: signatureDataUrl });
+      await axios.post(`/api/form/sign/${id}`, { signature: signatureDataUrl });
 
       setSigned(true);
       setMessage('החתימה נשמרה והמסמך נשלח אל השולח.');
@@ -77,7 +77,7 @@ const SignDocument = () => {
     {!pdfLoaded && <p style={{ color: 'gray' }}>טוען את המסמך...</p>}
 
     <iframe
-      src={`http://localhost:2000/api/form/view-pdf/${formData.fileName}`}
+      src={`/api/form/view-pdf/${formData.fileName}`}
       width="100%"
       height="800px"
       style={{ border: '3px solid #50a7f9', borderRadius: '8px', display: pdfLoaded ? 'block' : 'none' }}
