@@ -1,23 +1,26 @@
-# שלב 1: התקנת צד השרת והלקוח
 FROM node:18-slim
 
-# יצירת תיקיית עבודה
+# התקנות הדרושות להמרת DOCX ל־PDF
+RUN apt-get update && \
+    apt-get install -y libreoffice libreoffice-writer libreoffice-common && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    ln -s /usr/bin/libreoffice /usr/bin/soffice
+
+# יצירת תיקייה
 WORKDIR /app
 
 # העתקת כל הקבצים
 COPY . .
 
-# התקנת תלויות עבור השרת
+# התקנת תלויות
 RUN npm install
-
-# התקנת תלויות ובניית צד לקוח (React)
 RUN npm install --prefix client && npm run build --prefix client
 
-# הגדרת משתנה סביבה (אם צריך)
+# משתני סביבה
 ENV NODE_ENV=production
 
-# פתיחת הפורט
+# פתיחת פורט
 EXPOSE 3000
 
-# התחלת השרת
+# התחלת האפליקציה
 CMD ["npm", "start"]
