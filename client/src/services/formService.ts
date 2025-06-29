@@ -1,24 +1,25 @@
 import axios from 'axios';
-export async function uploadDocument(name: string, email: string, file: File) {
+export async function uploadDocument(name: string, email: string, file: File, senderEmail: string) {
   const formData = new FormData();
   formData.append('file', file);
 
-  // שלב 1: העלאת הקובץ
   const uploadRes = await axios.post('/api/form/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
 
   const fileName = uploadRes.data.fileName;
 
-  // שלב 2: שליחת נתוני הטופס ושמירה
+  // שליחת כל הנתונים לשרת
   const sendRes = await axios.post('/api/form/send', {
     name,
     email,
-    fileName
+    fileName,
+    senderEmail
   });
 
-  return sendRes.data; // מחזיר גם את ה־link עם מזהה ה־UUID
+  return sendRes.data;
 }
+
 
 
 export function getFileNameById(id: string) {

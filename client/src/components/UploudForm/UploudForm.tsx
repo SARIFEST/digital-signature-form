@@ -10,6 +10,7 @@ const UploudForm: FC<UploudFormProps> = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+    const [senderEmail, setSenderEmail] = useState('');
   
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -20,7 +21,8 @@ const UploudForm: FC<UploudFormProps> = () => {
       }
   
       try {
-        const data = await uploadDocument(name, email, file);
+        const data = await uploadDocument(name, email, file, senderEmail);
+       
         setMessage('המסמך הועלה בהצלחה!');
        
       } catch (err) {
@@ -34,6 +36,7 @@ const UploudForm: FC<UploudFormProps> = () => {
     <h2>העלאת מסמך לחתימה דיגיטלית</h2>
       
       <form className="UploudForm" onSubmit={handleSubmit}>
+        
         <label>שם </label>
         <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
   
@@ -42,6 +45,9 @@ const UploudForm: FC<UploudFormProps> = () => {
   
         <label>העלאת מסמך</label>
         <input type="file" accept=".doc,.docx" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+        <label>האימייל שלך (השולח)</label>
+<input type="email" value={senderEmail} onChange={(e) => setSenderEmail(e.target.value)} />
+
   
         <button type="submit">שלח לחתימה</button>
   

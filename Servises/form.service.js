@@ -93,17 +93,13 @@ const formRepository = require('../Repositories/form.repository');
 
 async function sendFile(req, res) {
   try {
-    const { name, email, fileName } = req.body;
-    console.log('📨 קיבלתי נתונים:', name, email, fileName);
+    const { name, email, fileName, senderEmail } = req.body; // הוספנו senderEmail
 
-    const form = await formRepository.addForm({ name, email, fileName });
-    console.log('✅ נוצר טופס עם מזהה:', form.id);
+    const form = await formRepository.addForm({ name, email, fileName, senderEmail }); // מעבירים את המייל
 
     const link = await formRepository.generateShareLink(form.id);
-    console.log('🔗 הלינק שנוצר:', link);
 
-    await formRepository.sendEmailWithLink(email, link);
-    console.log('✉️ המייל נשלח בהצלחה ל:', email);
+    await formRepository.sendEmailWithLink(email, link); // למקבל המייל המקורי
 
     res.status(200).json({
       message: 'המסמך נשלח בהצלחה',
@@ -119,6 +115,7 @@ async function sendFile(req, res) {
   }
 }
 
+
 async function uploadForm(name, email, fileName) {
   const newForm = {
     name,
@@ -129,7 +126,6 @@ async function uploadForm(name, email, fileName) {
   return formRepository.addForm(newForm);
 }
 
-// הצגת PDF (ממיר את ה-Word ל-PDF)
 async function viewForm(req, res) {
   const libre = require('libreoffice-convert');
   const path = require('path');

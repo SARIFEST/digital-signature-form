@@ -148,7 +148,6 @@ require('dotenv').config();
 
 const formsFilePath = path.join(__dirname, '..', 'data', 'forms.json');
 
-// קריאת כל הטפסים
 function getForms() {
   if (!fs.existsSync(formsFilePath)) {
     fs.writeFileSync(formsFilePath, JSON.stringify([]));
@@ -157,32 +156,34 @@ function getForms() {
   return JSON.parse(data);
 }
 
-// שמירת רשימת טפסים
 function saveForms(forms) {
   fs.writeFileSync(formsFilePath, JSON.stringify(forms, null, 2), 'utf-8');
 }
 
-// הוספת טופס חדש
-async function addForm({ name, email, fileName }) {
+async function addForm({ name, email, fileName, senderEmail }) {
   const id = uuidv4();
   const forms = getForms();
-  const newForm = { id, name, email, fileName, signedFileName: '', uploadedByEmail: process.env.EMAIL_USER };
+  const newForm = {
+    id,
+    name,
+    email,
+    fileName,
+    signedFileName: '',
+    uploadedByEmail: senderEmail || process.env.EMAIL_USER, // ✅ מייל השולח
+  };
 
   forms.push(newForm);
   saveForms(forms);
   return newForm;
 }
 
-// קבלת טופס לפי מזהה
 function getFormById(id) {
   const forms = getForms();
   return forms.find(form => form.id === id) || null;
 }
 
-// שליחת מייל עם קובץ מצורף (עם אופציה לפרטי חותם)
 async function sendEmailWithFile(email, filePath, signerInfo = {}) {
   const { signerName, signerEmail } = signerInfo;
-
   const htmlMessage = `
     <p>מצורף המסמך החתום.</p>
     ${signerName && signerEmail ? `
@@ -207,16 +208,10 @@ async function sendEmailWithFile(email, filePath, signerInfo = {}) {
     to: email,
     subject: 'המסמך החתום שלך',
     html: htmlMessage,
-    attachments: [
-      {
-        filename: path.basename(filePath),
-        path: filePath,
-      },
-    ],
+    attachments: [{ filename: path.basename(filePath), path: filePath }],
   });
 }
 
-// שליחת מייל עם לינק לחתימה
 async function sendEmailWithLink(email, link) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -230,11 +225,10 @@ async function sendEmailWithLink(email, link) {
     from: `"חתימה דיגיטלית" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: 'חתום על המסמך שלך',
-    html: `<p>שלום,</p><p>נא לחתום על המסמך בלינק הבא:</p><a href="${link}">${link}</a>`,
+    html: `<p>שלום,</p><p>נא לחתום על המסמך בלינק הבא:</p><a href="${link}">${link}</a>`
   });
 }
 
-// יצירת לינק לשיתוף המסמך
 async function generateShareLink(id) {
   const baseUrl = process.env.CLIENT_URL || 'http://localhost:3000';
   return `${baseUrl}/sign/${encodeURIComponent(id)}`;
