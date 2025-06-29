@@ -212,7 +212,7 @@ async function sendEmailWithFile(email, filePath, signerInfo = {}) {
   });
 }
 
-async function sendEmailWithLink(email, link) {
+async function sendEmailWithLink(email, link, senderEmail) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -224,10 +224,18 @@ async function sendEmailWithLink(email, link) {
   await transporter.sendMail({
     from: `"חתימה דיגיטלית" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'חתום על המסמך שלך',
-    html: `<p>שלום,</p><p>נא לחתום על המסמך בלינק הבא:</p><a href="${link}">${link}</a>`
+    replyTo: senderEmail, // 📨 מי שיקבל את המייל יוכל להשיב לשולח
+    subject: 'קיבלת מסמך לחתימה',
+    html: `
+      <p>שלום,</p>
+      <p>קיבלת מסמך לחתימה:</p>
+      <a href="${link}">${link}</a>
+      <br><br>
+      <p style="color:gray">המסמך נשלח על ידי: ${senderEmail}</p>
+    `,
   });
 }
+
 
 async function generateShareLink(id) {
   const baseUrl = process.env.CLIENT_URL || 'http://localhost:3000';

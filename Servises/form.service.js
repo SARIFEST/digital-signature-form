@@ -99,7 +99,8 @@ async function sendFile(req, res) {
 
     const link = await formRepository.generateShareLink(form.id);
 
-    await formRepository.sendEmailWithLink(email, link); // למקבל המייל המקורי
+  await formRepository.sendEmailWithLink(email, link, senderEmail);
+// למקבל המייל המקורי
 
     res.status(200).json({
       message: 'המסמך נשלח בהצלחה',

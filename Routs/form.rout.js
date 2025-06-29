@@ -270,10 +270,11 @@ router.post('/sign/:id', async (req, res) => {
 
         await formRepository.sendEmailWithFile(form.email, outputPath);
         if (form.uploadedByEmail) {
-          await formRepository.sendEmailWithFile(form.uploadedByEmail, outputPath, {
-            signerName: form.name,
-            signerEmail: form.email
-          });
+          await sendEmailWithFile(form.uploadedByEmail, outputPath, {
+  signerName: form.name,
+  signerEmail: form.email
+});
+
         }
 
         res.json({ message: 'המסמך נחתם ונשלח לשני הצדדים' });
